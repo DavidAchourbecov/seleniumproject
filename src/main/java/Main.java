@@ -10,25 +10,18 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
         WebDriver driver = initAndReturnDriver();
         System.out.println("Please enter your username and your password you use in order to enter the college website");
-        String username=scanner.nextLine();
-        String userPassword=scanner.nextLine();
-
+//        String username=scanner.nextLine();
+//        String userPassword=scanner.nextLine();
+        signInToMoodle(driver, "bareket21", "169Ash769");
         try {
-            signInToMoodle(driver, username, userPassword);
-            potentailFunction(driver);
-           //  workFunction(driver);
-//        List<WebElement> dFlex=driver.findElements(By.className("d-flex"));
-//            List<WebElement> dd =dFlex.get(63).findElements(By.tagName("div"));
-//            for (int i = 0; i <dd.size(); i++) {
-//                System.out.println(i + " *"+ dd.get(i).getText()+"*");
-//            }
-
+            List<WebElement> list=driver.findElements(By.className("multiline"));
+            for (int i = 0; i < list.size(); i++) {
+                System.out.println(i + "--> " + list.get(i).getText());
+            }
 
         } catch (Exception ex) {
-            //  ex.printStackTrace();
+             ex.printStackTrace();
 
-        } finally {
-            driver.close();
         }
 
     }
@@ -54,7 +47,7 @@ public class Main {
             WebElement moodleSystemElement = driver.findElement(By.cssSelector(Constants.MOODLE_BUTTON_ELEMENT_HREF_LINK));
             moodleSystemElement.click();
         } catch (Exception e) {
-            //e.printStackTrace();
+            e.printStackTrace();
         }
 
 
@@ -87,6 +80,7 @@ public class Main {
     }
 
     public static void workFunction(WebDriver driver) {
+       StringBuilder stringBuilder=new StringBuilder();
         List<WebElement> elements = driver.findElements(By.className("container-fluid"));
         List<WebElement> divs = elements.get(Constants.CONTAINER_FLUID_P0_CLASS_ELEMENT).findElements(By.tagName("div"));
         for (WebElement div : divs) {
@@ -98,8 +92,9 @@ public class Main {
                         String roleAttribute = list1.get(j).getAttribute("role");
                         if (roleAttribute != null) {
                            if (roleAttribute.equals("listitem")) {
-                               WebElement currentWebElement = list1.get(j).findElements(By.className("d-flex")).get(0).findElements(By.tagName("div")).get(4);
-                               System.out.println(currentWebElement.getText());
+                                 WebElement currentWebElement = list1.get(j).findElements(By.className("d-flex")).get(0);
+                                 stringBuilder.append(currentWebElement.findElements(By.tagName("div")).get(4).getText());
+
 
                     }
 
@@ -117,6 +112,7 @@ public class Main {
             }
 
         }
+        System.out.println("the text is " +stringBuilder);
 
     }
 
@@ -127,11 +123,8 @@ public class Main {
         List<WebElement> sections = regionMainId.findElements(By.tagName("section"));
         List<WebElement> hasBlockMb3Class = sections.get(Constants.HAS_BLOCKS_MB3_CLASS_).findElements(By.tagName("div"));
         WebElement cardText = hasBlockMb3Class.get(Constants.CARD_TEXT_CONTENT_CLASS);
-        List<WebElement> sonOfCardText=cardText.findElements(By.tagName("div"));
-        for (int i = 0; i < sonOfCardText.size(); i++) {
-            System.out.println(i+ " "+ sonOfCardText.get(i).getAttribute("class"));
+        System.out.println(cardText.getText());
         }
-       //
-    }
+
 }
 
