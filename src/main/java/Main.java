@@ -10,9 +10,9 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
         WebDriver driver = initAndReturnDriver();
         System.out.println("Please enter your username and your password you use in order to enter the college website");
-//        String username=scanner.nextLine();
-//        String userPassword=scanner.nextLine();
-        signInToMoodle(driver, "bareket21", "169Ash769");
+       String username=scanner.nextLine();
+        String userPassword=scanner.nextLine();
+        signInToMoodle(driver, username, userPassword);
         try {
             List<WebElement> list=driver.findElements(By.className("multiline"));
             for (int i = 0; i < list.size(); i++) {
