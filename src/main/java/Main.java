@@ -2,30 +2,30 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        WebDriver driver = initAndReturnDriver();
-        System.out.println("Please enter your username and your password you use in order to enter the college website");
-       String username=scanner.nextLine();
-        String userPassword=scanner.nextLine();
-        signInToMoodle(driver, username, userPassword);
         try {
-            List<WebElement> list=driver.findElements(By.className("multiline"));
-            for (int i = 0; i < list.size(); i++) {
-                System.out.println(i + "--> " + list.get(i).getText());
-            }
-
-        } catch (Exception ex) {
-             ex.printStackTrace();
-
+        System.out.println("Please enter your username and your password you use in order to enter the college website");
+        String username = scanner.nextLine();
+        String userPassword = scanner.nextLine();
+        WebDriver driver = initAndReturnDriver();
+        signInToMoodle(driver, username, userPassword);
+        WebElement chosenCourse= printCoursesListAndReturnChosenCourse(driver);
+        chosenCourse.click();
+        logOutFromMoodle(driver);
+        driver.close();
+   }catch (Exception e){
+           // e.printStackTrace();
         }
 
-    }
 
+    }
     public static WebDriver initAndReturnDriver() {
         System.setProperty("webdriver.chrome.driver",Constants.CHROME_DRIVER_LOCATION);
         WebDriver driver = new ChromeDriver();
@@ -34,7 +34,7 @@ public class Main {
         return driver;
     }
 
-    public static void signInToMoodle(WebDriver driver, String username, String password) {
+    public static void signInToMoodle (WebDriver driver, String username, String password) {
         try {
             WebElement personalInformationElement = driver.findElement(By.cssSelector(Constants.PERSONAL_INFORMATION_HREF_LINK));
             personalInformationElement.click();
@@ -70,60 +70,31 @@ public class Main {
             exitButtonElement.click();
         }
 
+
     }
+        public static WebElement printCoursesListAndReturnChosenCourse(WebDriver driver){
+        Scanner scanner =new Scanner(System.in);
+        int userChoice=0;
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            List<WebElement> coursesList = driver.findElements(By.className("multiline"));
+            for (int i = 0; i < coursesList.size(); i++) {
+                System.out.println(i + "--> " + coursesList.get(i).getText());
+            }
+            try {
+                System.out.println("please choose course from the list you like to enter to (enter only the number of the course!)");
+                userChoice=scanner.nextInt();
 
-    public static void returnCardTextClassElement(WebDriver driver) {
-        List<WebElement> elements = driver.findElements(By.className("container-fluid"));
-        List<WebElement> divs = elements.get(Constants.CONTAINER_FLUID_P0_CLASS_ELEMENT).findElements(By.tagName("div"));
-       WebElement element=elements.get(Constants.CONTAINER_FLUID_P0_CLASS_ELEMENT).findElement(By.className("card-text content mt-3"));
-        System.out.println(element.getAttribute("class"));
-    }
-
-    public static void workFunction(WebDriver driver) {
-       StringBuilder stringBuilder=new StringBuilder();
-        List<WebElement> elements = driver.findElements(By.className("container-fluid"));
-        List<WebElement> divs = elements.get(Constants.CONTAINER_FLUID_P0_CLASS_ELEMENT).findElements(By.tagName("div"));
-        for (WebElement div : divs) {
-            String currentClassName = div.getAttribute("class");
-            if (currentClassName.equals("card-text content mt-3")) {
-                for (WebElement element : div.findElements(By.tagName("div"))) {
-                    List<WebElement> list1 = element.findElements(By.tagName("div"));
-                    for (int j = 0; j < list1.size();j++) {
-                        String roleAttribute = list1.get(j).getAttribute("role");
-                        if (roleAttribute != null) {
-                           if (roleAttribute.equals("listitem")) {
-                                 WebElement currentWebElement = list1.get(j).findElements(By.className("d-flex")).get(0);
-                                 stringBuilder.append(currentWebElement.findElements(By.tagName("div")).get(4).getText());
-
-
-                    }
-
-
-
-
-
-                        }
-
-
-                    }
-                }
-
-
+            }catch (InputMismatchException e){
+                e.printStackTrace();
             }
 
-        }
-        System.out.println("the text is " +stringBuilder);
 
-    }
+            return coursesList.get(userChoice);
 
-    public static void potentailFunction(WebDriver driver) {
-        WebElement containerFluid = driver.findElement(By.className("container-fluid"));
-        List<WebElement> divs = containerFluid.findElements(By.tagName("div"));
-        WebElement regionMainId = divs.get(9).findElement(By.id("region-main-box"));
-        List<WebElement> sections = regionMainId.findElements(By.tagName("section"));
-        List<WebElement> hasBlockMb3Class = sections.get(Constants.HAS_BLOCKS_MB3_CLASS_).findElements(By.tagName("div"));
-        WebElement cardText = hasBlockMb3Class.get(Constants.CARD_TEXT_CONTENT_CLASS);
-        System.out.println(cardText.getText());
         }
 
 }
