@@ -2,7 +2,6 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
-import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -71,8 +70,7 @@ public class Main {
 
     }
         public static void printCoursesListAndEnterChosenCourse(WebDriver driver){
-        Scanner scanner =new Scanner(System.in);
-        int userChoice=0;
+        int userChoice;
             try {
                 Thread.sleep(Constants.SUSPEND_TIME);
             } catch (InterruptedException e) {
@@ -84,16 +82,25 @@ public class Main {
             }
             try {
                 System.out.println("please choose course from the list you like to enter to (enter only the number of the course in the list!)");
-                userChoice=scanner.nextInt();
+                userChoice=invalidInput(coursesList.size());
+                WebElement chosenCourse=coursesList.get(userChoice);
+                chosenCourse.click();
 
-            }catch (InputMismatchException e){
+            }catch (Exception e){
                 e.printStackTrace();
             }
 
-            WebElement chosenCourse=coursesList.get(userChoice);
-            chosenCourse.click();
 
+
+        }public static int invalidInput(int sizeOfList){
+        Scanner scanner = new Scanner(System.in);
+        int userChoice=scanner.nextInt();
+        while (userChoice<0 || userChoice>=sizeOfList){
+            System.out.println("you choice is invalid please enter again");
+            userChoice=scanner.nextInt();
         }
+        return userChoice;
+    }
 
 
 }
