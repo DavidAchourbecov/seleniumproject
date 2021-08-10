@@ -8,7 +8,7 @@ public class Constants {
     public static final String PERSONAL_INFORMATION_HREF_LINK="a[href='https://portal.aac.ac.il']";
     public static final String MENU_OPTIONS_BUTTON_ID="action-menu-toggle-1";
     public static final String LOG_OUT_ELEMENT_HREF_LINK="a[href=\"https://portal.aac.ac.il/AGLogout\"";
-
+    public static final int SUSPEND_TIME=2000;
 
 
 

@@ -2,7 +2,6 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
-
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
@@ -16,9 +15,8 @@ public class Main {
         String userPassword = scanner.nextLine();
         WebDriver driver = initAndReturnDriver();
         signInToMoodle(driver, username, userPassword);
-        WebElement chosenCourse= printCoursesListAndReturnChosenCourse(driver);
-        chosenCourse.click();
-        logOutFromMoodle(driver);
+        printCoursesListAndEnterChosenCourse(driver);
+        signOutFromMoodle(driver);
         driver.close();
    }catch (Exception e){
            // e.printStackTrace();
@@ -53,7 +51,7 @@ public class Main {
 
     }
 
-    public static void logOutFromMoodle(WebDriver driver) {
+    public static void signOutFromMoodle(WebDriver driver) {
         try {
             WebElement menuForUserButtonElement = driver.findElement(By.id(Constants.MENU_OPTIONS_BUTTON_ID));
             menuForUserButtonElement.click();
@@ -72,30 +70,31 @@ public class Main {
 
 
     }
-        public static WebElement printCoursesListAndReturnChosenCourse(WebDriver driver){
+        public static void printCoursesListAndEnterChosenCourse(WebDriver driver){
         Scanner scanner =new Scanner(System.in);
         int userChoice=0;
             try {
-                Thread.sleep(2000);
+                Thread.sleep(Constants.SUSPEND_TIME);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
             List<WebElement> coursesList = driver.findElements(By.className("multiline"));
             for (int i = 0; i < coursesList.size(); i++) {
-                System.out.println(i + "--> " + coursesList.get(i).getText());
+                System.out.println( coursesList.get(i).getText()+  " - " + i );
             }
             try {
-                System.out.println("please choose course from the list you like to enter to (enter only the number of the course!)");
+                System.out.println("please choose course from the list you like to enter to (enter only the number of the course in the list!)");
                 userChoice=scanner.nextInt();
 
             }catch (InputMismatchException e){
                 e.printStackTrace();
             }
 
-
-            return coursesList.get(userChoice);
+            WebElement chosenCourse=coursesList.get(userChoice);
+            chosenCourse.click();
 
         }
+
 
 }
 
